@@ -19,6 +19,7 @@ const registrationForm = document.getElementById("registration"); // get registr
 const usernameInput = registrationForm.elements["username"]; // get user name
 const emailInput = registrationForm.elements["email"]; // get user email
 const passwordInput = registrationForm.elements["password"];
+const passwordCheckInput = registrationForm.elements["passwordCheck"];
 const errorDisplay = document.getElementById("errorDisplay");  // get error display field
 
 // function to show error message as well as success message depending on input
@@ -93,6 +94,14 @@ function validatePassword(password, username){
         return `Passwords cannot contain the username.`
     }
 }
+function validatePasswordMatch(password, passwordCheck){
+    if(passwordCheck === ""){
+        return `Repeat password field cannot be empty`
+    }
+    if(password !== passwordCheck){
+        return `Both passwords must match.`
+    }
+}
 
 //Adding event listener 
 registrationForm.addEventListener("submit", (evt) => {
@@ -101,14 +110,15 @@ registrationForm.addEventListener("submit", (evt) => {
     const username = usernameInput.value;
     const email = emailInput.value;
     const password = passwordInput.value;
+    const passwordCheck = passwordCheckInput.value;
 
     const usernameError = validateUsername(username);
     const emailError = validateEmail(email);
     const passwordError = validatePassword(password, username);
+    const passwordCheckError = validatePasswordMatch(password, passwordCheck)
 
-
-    if (usernameError || emailError || passwordError) {
-        showMessage(usernameError || emailError || passwordError)
+    if (usernameError || emailError || passwordError || passwordCheckError) {
+        showMessage(usernameError || emailError || passwordError || passwordCheckError)
     } else {
         showMessage("Registration successful", true);
     }
