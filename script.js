@@ -17,6 +17,7 @@ General Requirements: Whenever any of these validation requirements fail, an ap
 // we start this by getting registration form that needs validation.
 const registrationForm = document.getElementById("registration"); // get registration form
 const usernameInput = registrationForm.elements["username"]; // get user name
+const emailInput = registrationForm.elements["email"]; // get user email
 const errorDisplay = document.getElementById("errorDisplay");  // get error display field
 
 // function to show error message as well as success message depending on input
@@ -27,21 +28,49 @@ function showMessage(message, isSuccess = false) {
     errorDisplay.style.color = isSuccess ? "#fff" : "red";
     setTimeout(() => {
         errorDisplay.style.display = "none";
-    }, 3000);
+    }, 5000);
 }
 
 // function to validate username
-function validateUsername(username){
-    if(username === ""){
+function validateUsername(username) {
+    if (username === "") {
         return `The username cannot be blank`
     }
-    if(username.length < 4){
+    if (username.length < 4) {
         return `The username must be at least four characters long.`
     }
-    if(new Set(username).size < 2){
+    if (new Set(username).size < 2) {
         return `The username must contain at least two unique characters.`
     }
-    if (/[\s\W]/.test(username)) return "The username cannot contain any special characters or whitespace.";
+    if (/[\s\W]/.test(username)) return `The username cannot contain any special characters or whitespace.`;
+}
+
+// Function to validate username
+function validateEmail(email) {
+    const emailVal = email;
+
+    const atpos = emailVal.indexOf('@');
+    const dotpos = emailVal.lastIndexOf('.');
+
+    if (email === '') {
+        return 'Please provide an email';
+    }
+
+    if (atpos < 1) {
+        return 'Your email must include an @ symbol, which must not be at the beginning of the email.';
+    }
+
+    if (dotpos - atpos < 2) {
+        return 'Invalid structure: @.\nYou must include a domain name after the @ symbol.';
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email)) {
+        return 'The email must be a valid email address. Double check your email address';
+    }
+
+    if (/@example\.com$/.test(email)) {
+        return 'The email must not be from the domain example.com.';
+    }
 }
 
 //Adding event listener 
@@ -49,12 +78,14 @@ registrationForm.addEventListener("submit", (evt) => {
     evt.preventDefault();
 
     const username = usernameInput.value;
+    const email = emailInput.value;
 
     const usernameError = validateUsername(username);
+    const emailError = validateEmail(email);
 
-    if(usernameError){
-        showMessage(usernameError)
-    }else{
+    if (usernameError || emailError) {
+        showMessage(usernameError || emailError)
+    } else {
         showMessage("Registration successful", true);
     }
 
