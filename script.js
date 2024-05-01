@@ -18,8 +18,9 @@ General Requirements: Whenever any of these validation requirements fail, an ap
 const registrationForm = document.getElementById("registration"); // get registration form
 const usernameInput = registrationForm.elements["username"]; // get user name
 const emailInput = registrationForm.elements["email"]; // get user email
-const passwordInput = registrationForm.elements["password"];
-const passwordCheckInput = registrationForm.elements["passwordCheck"];
+const passwordInput = registrationForm.elements["password"]; // get user password
+const passwordCheckInput = registrationForm.elements["passwordCheck"]; // get user repeat password
+const termsInput = registrationForm.elements["terms"]; // get user terms check 
 const errorDisplay = document.getElementById("errorDisplay");  // get error display field
 
 // function to show error message as well as success message depending on input
@@ -103,6 +104,12 @@ function validatePasswordMatch(password, passwordCheck){
     }
 }
 
+function validateTerms(termsChecked){
+    if(!termsChecked){
+        return `The terms and conditions must be accepted.`
+    }
+}
+
 //Adding event listener 
 registrationForm.addEventListener("submit", (evt) => {
     evt.preventDefault();
@@ -111,14 +118,16 @@ registrationForm.addEventListener("submit", (evt) => {
     const email = emailInput.value;
     const password = passwordInput.value;
     const passwordCheck = passwordCheckInput.value;
+    const termsChecked = termsInput.checked;
 
     const usernameError = validateUsername(username);
     const emailError = validateEmail(email);
     const passwordError = validatePassword(password, username);
     const passwordCheckError = validatePasswordMatch(password, passwordCheck)
+    const termsError = validateTerms(termsChecked);
 
-    if (usernameError || emailError || passwordError || passwordCheckError) {
-        showMessage(usernameError || emailError || passwordError || passwordCheckError)
+    if (usernameError || emailError || passwordError || passwordCheckError || termsError) {
+        showMessage(usernameError || emailError || passwordError || passwordCheckError || termsError)
     } else {
         showMessage("Registration successful", true);
     }
