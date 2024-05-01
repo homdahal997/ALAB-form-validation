@@ -129,6 +129,12 @@ registrationForm.addEventListener("submit", (evt) => {
     if (usernameError || emailError || passwordError || passwordCheckError || termsError) {
         showMessage(usernameError || emailError || passwordError || passwordCheckError || termsError)
     } else {
+        //Clear all form fields after successful submission and show a success message.
+        usernameInput.value = "";
+        emailInput.value = "";
+        passwordInput.value = "";
+        passwordCheckInput.value = "";
+        termsInput.checked = false;
         showMessage("Registration successful", true);
     }
 
