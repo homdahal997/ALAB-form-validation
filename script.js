@@ -18,6 +18,7 @@ General Requirements: Whenever any of these validation requirements fail, an ap
 const registrationForm = document.getElementById("registration"); // get registration form
 const usernameInput = registrationForm.elements["username"]; // get user name
 const emailInput = registrationForm.elements["email"]; // get user email
+const passwordInput = registrationForm.elements["password"];
 const errorDisplay = document.getElementById("errorDisplay");  // get error display field
 
 // function to show error message as well as success message depending on input
@@ -72,6 +73,26 @@ function validateEmail(email) {
         return 'The email must not be from the domain example.com.';
     }
 }
+function validatePassword(password, username){
+    if(password.length < 12){
+        return `Passwords must be at least 12 characters long.`
+    }
+    if (!/[a-z]/.test(password) || !/[A-Z]/.test(password)){
+        return `Passwords must have at least one uppercase and one lowercase letter.`
+    }
+    if (!/\d/.test(password)){
+        return `Passwords must contain at least one number.`
+    }
+    if (!/\W/.test(password)){
+        return `Passwords must contain at least one special character.`
+    }
+    if (/password/i.test(password)){
+        return `Passwords cannot contain the word "password" (uppercase, lowercase, or mixed).`
+    }
+    if (new RegExp(username, "i").test(password)){
+        return `Passwords cannot contain the username.`
+    }
+}
 
 //Adding event listener 
 registrationForm.addEventListener("submit", (evt) => {
@@ -79,12 +100,15 @@ registrationForm.addEventListener("submit", (evt) => {
 
     const username = usernameInput.value;
     const email = emailInput.value;
+    const password = passwordInput.value;
 
     const usernameError = validateUsername(username);
     const emailError = validateEmail(email);
+    const passwordError = validatePassword(password, username);
 
-    if (usernameError || emailError) {
-        showMessage(usernameError || emailError)
+
+    if (usernameError || emailError || passwordError) {
+        showMessage(usernameError || emailError || passwordError)
     } else {
         showMessage("Registration successful", true);
     }
