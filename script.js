@@ -110,6 +110,8 @@ function validateTerms(termsChecked){
     }
 }
 
+// Store user data in localStorage
+let users = JSON.parse(localStorage.getItem('users')) || {};
 //Adding event listener 
 registrationForm.addEventListener("submit", (evt) => {
     evt.preventDefault();
@@ -129,6 +131,22 @@ registrationForm.addEventListener("submit", (evt) => {
     if (usernameError || emailError || passwordError || passwordCheckError || termsError) {
         showMessage(usernameError || emailError || passwordError || passwordCheckError || termsError)
     } else {
+        // Check if username or email is unique
+        if (Object.values(users).some(user => user.email === email.toLowerCase())) {
+            showMessage("That email is already registered");
+            return;
+        }
+        if (users[username.toLowerCase()]) {
+            showMessage("That username is already taken");
+            return;
+        }
+
+        // Store user data
+        users[username.toLowerCase()] = {
+            email: email.toLowerCase(),
+            password: password
+        };
+        localStorage.setItem('users', JSON.stringify(users));
         //Clear all form fields after successful submission and show a success message.
         usernameInput.value = "";
         emailInput.value = "";
