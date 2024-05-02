@@ -157,3 +157,41 @@ registrationForm.addEventListener("submit", (evt) => {
     }
 
 }); // end eventListener
+
+// Part 4: Login Form Validation Requirements
+const loginForm = document.getElementById("login"); // get login form
+const loginUsernameInput = loginForm.elements["username"]; // get login username
+const loginPasswordInput = loginForm.elements["password"]; // get login password
+const persistInput = loginForm.elements["persist"]; // get keep me logged in checkbox
+
+loginForm.addEventListener("submit", (evt) => {
+    evt.preventDefault();
+
+    const username = loginUsernameInput.value;
+    const password = loginPasswordInput.value;
+    const persist = persistInput.checked;
+
+    // Validate username and password
+    if (username === "") {
+        showMessage("The username cannot be blank");
+        return;
+    }
+    if (!users[username.toLowerCase()]) {
+        showMessage("The username does not exist");
+        return;
+    }
+    if (password === "") {
+        showMessage("The password cannot be blank");
+        return;
+    }
+    if (users[username.toLowerCase()].password !== password) {
+        showMessage("The password is incorrect");
+        return;
+    }
+
+    // Clear all form fields and show a success message.
+    loginUsernameInput.value = "";
+    loginPasswordInput.value = "";
+    persistInput.checked = false;
+    showMessage("Login successful" + (persist ? ", you will be kept logged in" : ""), true);
+});
